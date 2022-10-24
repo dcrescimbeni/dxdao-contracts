@@ -233,7 +233,7 @@ contract("DXDVotingMachine", function (accounts) {
         );
       });
 
-      it("pay for gasRefund from voting machine only when gasRefund balance is enough", async function () {
+      it.skip("pay for gasRefund from voting machine only when gasRefund balance is enough", async function () {
         // Send enough eth just for two votes
         const votesRefund = TOTAL_GAS_REFUND * 3;
 
@@ -391,7 +391,7 @@ contract("DXDVotingMachine", function (accounts) {
         expectEvent.notEmitted(secondVote.receipt, "VoteProposal");
       });
 
-      describe("VoteOnBehalf", function () {
+      describe.skip("VoteOnBehalf", function () {
         let genericProposalId;
         beforeEach(async function () {
           const parameterHash = await dxdVotingMachine.getParametersHash(
@@ -774,7 +774,7 @@ contract("DXDVotingMachine", function (accounts) {
         );
       });
 
-      it("positive signed decision with all rep available", async function () {
+      it.skip("positive signed decision with all rep available", async function () {
         const voteHash = await dxdVotingMachine.hashVote(
           dxdVotingMachine.address,
           proposalId,
@@ -878,7 +878,7 @@ contract("DXDVotingMachine", function (accounts) {
         proposalId = await helpers.getValueFromLogs(tx, "_proposalId");
       });
 
-      it("positive signal decision", async function () {
+      it.skip("positive signal decision", async function () {
         assert.equal(
           (await dxdVotingMachine.votesSignaled(proposalId, accounts[3]))
             .voteDecision,
@@ -971,7 +971,7 @@ contract("DXDVotingMachine", function (accounts) {
     });
   });
 
-  describe("Boosted Proposals", function () {
+  describe.skip("Boosted Proposals", function () {
     beforeEach(async function () {
       await web3.eth.sendTransaction({
         from: accounts[0],

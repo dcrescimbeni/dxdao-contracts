@@ -224,7 +224,7 @@ contract("WalletScheme", function (accounts) {
     );
   });
 
-  it("Registrar Scheme", async function () {
+  it.skip("Registrar Scheme", async function () {
     await web3.eth.sendTransaction({
       from: accounts[0],
       to: org.avatar.address,
@@ -412,7 +412,7 @@ contract("WalletScheme", function (accounts) {
   });
 
   // eslint-disable-next-line max-len
-  it("MasterWalletScheme - proposal to change max proposal time fails- positive decision - proposal fails", async () => {
+  it.skip("MasterWalletScheme - proposal to change max proposal time fails- positive decision - proposal fails", async () => {
     const callData = helpers.encodeMaxSecondsForExecution(86400 - 1);
 
     expectRevert(
@@ -514,7 +514,7 @@ contract("WalletScheme", function (accounts) {
     assert.equal((await avatarScheme.getOrganizationProposals()).length, 0);
   });
 
-  it("MasterWalletScheme - proposal with data - negative decision - proposal rejected", async function () {
+  it.skip("MasterWalletScheme - proposal with data - negative decision - proposal rejected", async function () {
     const callData = helpers.testCallFrom(org.avatar.address);
 
     let tx = await avatarScheme.proposeCalls(
@@ -549,7 +549,7 @@ contract("WalletScheme", function (accounts) {
     assert.equal(organizationProposal.value[0], 0);
   });
 
-  it("MasterWalletScheme - proposal with data - positive decision - proposal executed", async function () {
+  it.skip("MasterWalletScheme - proposal with data - positive decision - proposal executed", async function () {
     const callData = helpers.encodeMaxSecondsForExecution(
       executionTimeout + 666
     );
@@ -581,7 +581,7 @@ contract("WalletScheme", function (accounts) {
     assert.equal(organizationProposal.value[0], 0);
   });
 
-  it("MasterWalletScheme - proposal with data - positive decision - proposal executed", async function () {
+  it.skip("MasterWalletScheme - proposal with data - positive decision - proposal executed", async function () {
     const callData = helpers.encodeMaxSecondsForExecution(executionTimeout);
 
     const proposalId1 = helpers.getValueFromLogs(
@@ -710,7 +710,7 @@ contract("WalletScheme", function (accounts) {
     );
   });
 
-  it("Not allowed by permission registry", async function () {
+  it.skip("Not allowed by permission registry", async function () {
     await permissionRegistry.setETHPermission(
       org.avatar.address,
       constants.NULL_ADDRESS,
@@ -757,7 +757,7 @@ contract("WalletScheme", function (accounts) {
     );
   });
 
-  it("Global ETH transfer value not allowed value by permission registry", async function () {
+  it.skip("Global ETH transfer value not allowed value by permission registry", async function () {
     await permissionRegistry.setETHPermission(
       org.avatar.address,
       constants.NULL_ADDRESS,
@@ -821,7 +821,7 @@ contract("WalletScheme", function (accounts) {
   });
 
   // eslint-disable-next-line max-len
-  it("MasterWalletScheme - positive decision - proposal executed - not allowed value by permission registry in multiple calls", async function () {
+  it.skip("MasterWalletScheme - positive decision - proposal executed - not allowed value by permission registry in multiple calls", async function () {
     await web3.eth.sendTransaction({
       from: accounts[0],
       to: org.avatar.address,
@@ -875,7 +875,7 @@ contract("WalletScheme", function (accounts) {
   });
 
   // eslint-disable-next-line max-len
-  it("MasterWalletScheme - positive decision - proposal executed - allowed by permission registry from scheme", async () => {
+  it.skip("MasterWalletScheme - positive decision - proposal executed - allowed by permission registry from scheme", async () => {
     const callData = helpers.testCallFrom(org.avatar.address);
 
     assert.notEqual(
@@ -971,7 +971,7 @@ contract("WalletScheme", function (accounts) {
     assert.equal(organizationProposal.value[0], 0);
   });
 
-  it("MasterWalletScheme - positive decision - proposal executed with multiple calls and value", async function () {
+  it.skip("MasterWalletScheme - positive decision - proposal executed with multiple calls and value", async function () {
     var wallet = await Wallet.new();
     await web3.eth.sendTransaction({
       from: accounts[0],
@@ -1046,7 +1046,7 @@ contract("WalletScheme", function (accounts) {
     assert.equal(organizationProposal.value[1], 0);
   });
 
-  it("MasterWalletScheme - positive decision - proposal execute and show revert in return", async function () {
+  it.skip("MasterWalletScheme - positive decision - proposal execute and show revert in return", async function () {
     const callData = helpers.testCallFrom(constants.NULL_ADDRESS);
 
     let tx = await avatarScheme.proposeCalls(
@@ -1086,7 +1086,7 @@ contract("WalletScheme", function (accounts) {
     );
   });
 
-  it("MasterWalletScheme - positive decision - proposal executed without return value", async function () {
+  it.skip("MasterWalletScheme - positive decision - proposal executed without return value", async function () {
     const callData = helpers.testCallWithoutReturnValueFrom(org.avatar.address);
 
     let tx = await avatarScheme.proposeCalls(
@@ -1124,7 +1124,7 @@ contract("WalletScheme", function (accounts) {
     assert.equal(organizationProposal.value[0], 0);
   });
 
-  it("MasterWalletScheme - proposal with REP - execute mintReputation & burnReputation", async function () {
+  it.skip("MasterWalletScheme - proposal with REP - execute mintReputation & burnReputation", async function () {
     const callDataMintRep = await org.controller.contract.methods
       .mintReputation(constants.TEST_VALUE, accounts[4], org.avatar.address)
       .encodeABI();
@@ -1195,7 +1195,7 @@ contract("WalletScheme", function (accounts) {
     assert.equal(burnRepProposal.value[0], 0);
   });
 
-  it("MasterWalletScheme - proposal to mint more REP than the % allowed reverts", async function () {
+  it.skip("MasterWalletScheme - proposal to mint more REP than the % allowed reverts", async function () {
     const totalSupplyWhenExecuting = await org.reputation.totalSupply();
     const maxRepAmountToChange =
       (totalSupplyWhenExecuting * 105) / 100 - totalSupplyWhenExecuting;
@@ -1263,7 +1263,7 @@ contract("WalletScheme", function (accounts) {
     );
   });
 
-  it("MasterWalletScheme - proposal to burn more REP than the % allowed reverts", async function () {
+  it.skip("MasterWalletScheme - proposal to burn more REP than the % allowed reverts", async function () {
     const voterRep = await org.reputation.balanceOf(accounts[2]);
     const totalSupplyWhenExecuting = await org.reputation.totalSupply();
     const maxRepAmountToChange = -(
@@ -1336,7 +1336,7 @@ contract("WalletScheme", function (accounts) {
   });
 
   // eslint-disable-next-line max-len
-  it("MasterWalletScheme - proposals adding/removing schemes - execute registerScheme & removeScheme fails", async function () {
+  it.skip("MasterWalletScheme - proposals adding/removing schemes - execute registerScheme & removeScheme fails", async function () {
     const callDataRegisterScheme = await org.controller.contract.methods
       .registerScheme(
         constants.SOME_ADDRESS,
@@ -1407,7 +1407,7 @@ contract("WalletScheme", function (accounts) {
     assert.equal(removedScheme.permissions, "0x00000001");
   });
 
-  it("MasterWalletScheme - execute should fail if not passed/executed from votingMachine", async function () {
+  it.skip("MasterWalletScheme - execute should fail if not passed/executed from votingMachine", async function () {
     const callData = helpers.testCallFrom(org.avatar.address);
     var tx = await avatarScheme.proposeCalls(
       [actionMock.address],
@@ -1427,7 +1427,7 @@ contract("WalletScheme", function (accounts) {
     );
   });
 
-  it("MasterWalletScheme - positive decision - proposal executed with transfer, pay and mint rep", async function () {
+  it.skip("MasterWalletScheme - positive decision - proposal executed with transfer, pay and mint rep", async function () {
     var wallet = await Wallet.new();
     await web3.eth.sendTransaction({
       from: accounts[0],
@@ -1551,7 +1551,7 @@ contract("WalletScheme", function (accounts) {
     );
   });
 
-  it("MasterWalletScheme cant receive value in contract", async function () {
+  it.skip("MasterWalletScheme cant receive value in contract", async function () {
     await expectRevert(
       web3.eth.sendTransaction({
         from: accounts[0],
@@ -1562,7 +1562,7 @@ contract("WalletScheme", function (accounts) {
     );
   });
 
-  it("QuickWalletScheme can receive value in contract", async function () {
+  it.skip("QuickWalletScheme can receive value in contract", async function () {
     await web3.eth.sendTransaction({
       from: accounts[0],
       to: walletScheme.address,
@@ -1570,7 +1570,7 @@ contract("WalletScheme", function (accounts) {
     });
   });
 
-  it("QuickWalletScheme - proposal with data - negative decision - proposal rejected", async function () {
+  it.skip("QuickWalletScheme - proposal with data - negative decision - proposal rejected", async function () {
     const callData = helpers.testCallFrom(walletScheme.address);
 
     let tx = await walletScheme.proposeCalls(
@@ -1603,7 +1603,7 @@ contract("WalletScheme", function (accounts) {
     assert.equal(organizationProposal.value[0], 0);
   });
 
-  it("QuickWalletScheme - proposal with data - positive decision - proposal executed", async function () {
+  it.skip("QuickWalletScheme - proposal with data - positive decision - proposal executed", async function () {
     const callData = helpers.testCallFrom(walletScheme.address);
 
     const tx = await walletScheme.proposeCalls(
@@ -1635,7 +1635,7 @@ contract("WalletScheme", function (accounts) {
   });
 
   // eslint-disable-next-line max-len
-  it("QuickWalletScheme - proposal with data - positive decision - proposal executed with multiple calls and value", async function () {
+  it.skip("QuickWalletScheme - proposal with data - positive decision - proposal executed with multiple calls and value", async function () {
     var wallet = await Wallet.new();
     await web3.eth.sendTransaction({
       from: accounts[0],
@@ -1701,7 +1701,7 @@ contract("WalletScheme", function (accounts) {
     assert.equal(organizationProposal.value[1], 0);
   });
 
-  it("QuickWalletScheme - proposal with data - positive decision - proposal execution fail and timeout", async () => {
+  it.skip("QuickWalletScheme - proposal with data - positive decision - proposal execution fail and timeout", async () => {
     const callData = helpers.testCallFrom(constants.NULL_ADDRESS);
 
     let tx = await walletScheme.proposeCalls(
@@ -1742,7 +1742,7 @@ contract("WalletScheme", function (accounts) {
   });
 
   // eslint-disable-next-line max-len
-  it("QuickWalletScheme - proposal with data - positive decision - proposal executed without return value", async function () {
+  it.skip("QuickWalletScheme - proposal with data - positive decision - proposal executed without return value", async function () {
     const callData = helpers.testCallWithoutReturnValueFrom(
       walletScheme.address
     );
@@ -1779,7 +1779,7 @@ contract("WalletScheme", function (accounts) {
     assert.equal(organizationProposal.value[0], 0);
   });
 
-  it("QuickWalletScheme - proposal with REP - execute mintReputation & burnReputation", async function () {
+  it.skip("QuickWalletScheme - proposal with REP - execute mintReputation & burnReputation", async function () {
     const callDataMintRep = await org.controller.contract.methods
       .mintReputation(constants.TEST_VALUE, accounts[4], org.avatar.address)
       .encodeABI();
@@ -1829,7 +1829,7 @@ contract("WalletScheme", function (accounts) {
   });
 
   // eslint-disable-next-line max-len
-  it("QuickWalletScheme - proposals adding/removing schemes - should fail on registerScheme & removeScheme", async function () {
+  it.skip("QuickWalletScheme - proposals adding/removing schemes - should fail on registerScheme & removeScheme", async function () {
     await permissionRegistry.setETHPermission(
       walletScheme.address,
       org.controller.address,
@@ -1954,7 +1954,7 @@ contract("WalletScheme", function (accounts) {
   });
 
   // eslint-disable-next-line max-len
-  it("QuickWalletScheme - positive decision - proposal executed - allowed by permission registry from scheme", async function () {
+  it.skip("QuickWalletScheme - positive decision - proposal executed - allowed by permission registry from scheme", async function () {
     const callData = helpers.testCallFrom(walletScheme.address);
 
     assert.notEqual(
@@ -2060,7 +2060,7 @@ contract("WalletScheme", function (accounts) {
     assert.equal(organizationProposal.value[0], 0);
   });
 
-  it("QuickWalletScheme - positive decision - proposal executed with transfer, pay and mint rep", async function () {
+  it.skip("QuickWalletScheme - positive decision - proposal executed with transfer, pay and mint rep", async function () {
     var wallet = await Wallet.new();
     await web3.eth.sendTransaction({
       from: accounts[0],
@@ -2144,7 +2144,7 @@ contract("WalletScheme", function (accounts) {
     assert.equal(organizationProposal.value[2], 0);
   });
 
-  describe("ERC20 Transfers", async function () {
+  describe.skip("ERC20 Transfers", async function () {
     // eslint-disable-next-line max-len
     it("MasterWalletScheme - positive decision - proposal executed - ERC20 transfer allowed by permission registry from scheme", async function () {
       await testToken.transfer(org.avatar.address, 200, { from: accounts[1] });
