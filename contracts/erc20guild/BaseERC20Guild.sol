@@ -158,6 +158,39 @@ contract BaseERC20Guild {
 
     bool internal isExecutingProposal;
 
+    // @notice Emmited when a variable or property cannot be zero
+    error ERC20Guild__CannotBeZero(bytes32 elementName);
+
+    // @notice Emmited when the sender is no the contract address
+    error ERC20Guild__OnlyCallablebyItselfOrWhenInitialized();
+
+    // @notice Emmited when the lock time is set higher than the proposal time
+    error ERC20Guild__LockTimeHigherOrEqualProposalTime();
+
+    // @notice Emmited when the vote gas is set higher then the maximum allowed
+    error ERC20Guild__InvalidVoteGas();
+
+    // @notice Emmited when there aren't enough tokens locked to create a proposal
+    error ERC20Guild__NotEnoughTokensToCreateProposal();
+
+    // @notice Emmited when there are not enough members to create a proposal
+    error ERC20Guild__NotEnoughMembersForProposalCreation();
+
+    // @notice Emmited when the maximum amount of active proposals is reached
+    error ERC20Guild__MaxAmountOfActiveProposalsReached();
+
+    // @notice Emmited when not enough voting power to create a proposal
+    error ERC20Guild__NotEnoughVotingPowerForProposalCreation();
+
+    // @notice Emmited when wrong length of to, data or value arrays
+    error ERC20Guild__WrongLengthOfToDataOrValue();
+
+    // @notice Emmited when totalActions or value lengths are invalid
+    error ERC20Guild__InvalidTotalActionsOrActionCallsLength();
+
+    // @notice Emmited when the maximum amount of actions per proposal reached
+    error ERC20Guild__MaximumActionsPerProposalReached();
+
     fallback() external payable {}
 
     // @dev Set the ERC20Guild configuration, can be called only executing a proposal or when it is initialized
@@ -183,11 +216,26 @@ contract BaseERC20Guild {
         uint256 _minimumMembersForProposalCreation,
         uint256 _minimumTokensLockedForProposalCreation
     ) external virtual {
-        require(msg.sender == address(this), "ERC20Guild: Only callable by ERC20guild itself or when initialized");
-        require(_proposalTime > 0, "ERC20Guild: proposal time has to be more than 0");
-        require(_lockTime >= _proposalTime, "ERC20Guild: lockTime has to be higher or equal to proposalTime");
-        require(_votingPowerForProposalExecution > 0, "ERC20Guild: voting power for execution has to be more than 0");
-        require(_voteGas <= 117000, "ERC20Guild: vote gas has to be equal or lower than 117000");
+        if (msg.sender != address(this)) {
+            revert ERC20Guild__OnlyCallablebyItselfOrWhenInitialized();
+        }
+
+        if (_proposalTime <= 0) {
+            revert ERC20Guild__CannotBeZero({elementName: "_proposalTime"});
+        }
+
+        if (_lockTime < _proposalTime) {
+            revert ERC20Guild__LockTimeHigherOrEqualProposalTime();
+        }
+
+        if (_votingPowerForProposalExecution <= 0) {
+            revert ERC20Guild__CannotBeZero({elementName: "_votingPowerForProposalExecution"});
+        }
+
+        if (_voteGas > 117000) {
+            revert ERC20Guild__InvalidVoteGas();
+        }
+
         proposalTime = _proposalTime;
         timeForExecution = _timeForExecution;
         votingPowerForProposalExecution = _votingPowerForProposalExecution;
@@ -215,31 +263,37 @@ contract BaseERC20Guild {
         string memory title,
         string memory contentHash
     ) public virtual returns (bytes32) {
-        require(
-            totalLocked >= minimumTokensLockedForProposalCreation,
-            "ERC20Guild: Not enough tokens locked to create a proposal"
-        );
+        if (totalLocked < minimumTokensLockedForProposalCreation) {
+            revert ERC20Guild__NotEnoughTokensToCreateProposal();
+        }
 
-        require(
-            totalMembers >= minimumMembersForProposalCreation,
-            "ERC20Guild: Not enough members to create a proposal"
-        );
+        if (totalMembers < minimumMembersForProposalCreation) {
+            revert ERC20Guild__NotEnoughMembersForProposalCreation();
+        }
 
-        require(activeProposalsNow < getMaxActiveProposals(), "ERC20Guild: Maximum amount of active proposals reached");
-        require(
-            votingPowerOf(msg.sender) >= getVotingPowerForProposalCreation(),
-            "ERC20Guild: Not enough votingPower to create proposal"
-        );
-        require(
-            (to.length == data.length) && (to.length == value.length),
-            "ERC20Guild: Wrong length of to, data or value arrays"
-        );
-        require(to.length > 0, "ERC20Guild: to, data value arrays cannot be empty");
-        require(
-            totalActions <= to.length && value.length.mod(totalActions) == 0,
-            "ERC20Guild: Invalid totalActions or action calls length"
-        );
-        require(totalActions <= MAX_ACTIONS_PER_PROPOSAL, "ERC20Guild: Maximum amount of actions per proposal reached");
+        if (activeProposalsNow >= getMaxActiveProposals()) {
+            revert ERC20Guild__MaxAmountOfActiveProposalsReached();
+        }
+
+        if (votingPowerOf(msg.sender) < getVotingPowerForProposalCreation()) {
+            revert ERC20Guild__NotEnoughVotingPowerForProposalCreation();
+        }
+
+        if ((to.length != data.length) || (to.length != value.length)) {
+            revert ERC20Guild__WrongLengthOfToDataOrValue();
+        }
+
+        if (to.length == 0) {
+            revert ERC20Guild__CannotBeZero({elementName: "to.length"});
+        }
+
+        if ((totalActions > to.length) || (value.length.mod(totalActions) != 0)) {
+            revert ERC20Guild__InvalidTotalActionsOrActionCallsLength();
+        }
+
+        if (totalActions > MAX_ACTIONS_PER_PROPOSAL) {
+            revert ERC20Guild__MaximumActionsPerProposalReached();
+        }
 
         bytes32 proposalId = keccak256(abi.encodePacked(msg.sender, block.timestamp, totalProposals));
         totalProposals = totalProposals.add(1);
