@@ -143,7 +143,7 @@ contract("SnapshotRepERC20Guild", function (accounts) {
         constants.SOME_HASH,
         { from: accounts[1] }
       ),
-      "ERC20Guild: Not enough votingPower to create proposal"
+      "ERC20Guild__NotEnoughVotingPowerForProposalCreation"
     );
 
     proposalId = await createProposal(genericProposal);

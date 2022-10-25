@@ -553,7 +553,7 @@ contract("ERC20Guild", function (accounts) {
       // Expect new proposal to be rejected with 0 tokens locked.
       await expectRevert(
         createProposal(genericProposal),
-        "ERC20Guild: Not enough tokens locked to create a proposal"
+        "ERC20Guild__NotEnoughTokensToCreateProposal"
       );
 
       // Lock new tokens but not enough for minimum required to pass
@@ -567,7 +567,7 @@ contract("ERC20Guild", function (accounts) {
       // Expect new proposal to be rejected with only 2999 tokens locked.
       await expectRevert(
         createProposal(genericProposal),
-        "ERC20Guild: Not enough tokens locked to create a proposal"
+        "ERC20Guild__NotEnoughTokensToCreateProposal"
       );
     });
 
@@ -638,7 +638,7 @@ contract("ERC20Guild", function (accounts) {
       // Expect new proposal to be rejected with only 2 members.
       await expectRevert(
         createProposal(genericProposal),
-        "ERC20Guild: Not enough members to create a proposal"
+        "ERC20Guild__NotEnoughMembersForProposalCreation"
       );
 
       // withdraw remaining members tokens.
@@ -649,7 +649,7 @@ contract("ERC20Guild", function (accounts) {
       // Expect new proposal to be rejected with only 0.
       await expectRevert(
         createProposal(genericProposal),
-        "ERC20Guild: Not enough members to create a proposal"
+        "ERC20Guild__NotEnoughMembersForProposalCreation"
       );
     });
 
@@ -665,10 +665,11 @@ contract("ERC20Guild", function (accounts) {
           constants.SOME_HASH,
           { from: accounts[2] }
         ),
-        "ERC20Guild: Invalid totalActions or action calls length"
+        "ERC20Guild__InvalidTotalActionsOrActionCallsLength"
       );
     });
 
+    // ! revise
     it("cannot create a proposal without enough creation votes", async function () {
       await expectRevert(
         erc20Guild.createProposal(
@@ -680,7 +681,7 @@ contract("ERC20Guild", function (accounts) {
           constants.SOME_HASH,
           { from: accounts[9] }
         ),
-        "ERC20Guild: Not enough votingPower to create proposal"
+        "ERC20Guild__NotEnoughVotingPowerForProposalCreation"
       );
     });
 
@@ -695,7 +696,7 @@ contract("ERC20Guild", function (accounts) {
           constants.NULL_ADDRESS,
           { from: accounts[3] }
         ),
-        "ERC20Guild: Wrong length of to, data or value arrays"
+        "ERC20Guild__WrongLengthOfToDataOrValue"
       );
     });
 
@@ -710,7 +711,7 @@ contract("ERC20Guild", function (accounts) {
           constants.NULL_ADDRESS,
           { from: accounts[3] }
         ),
-        "ERC20Guild: Wrong length of to, data or value arrays"
+        "ERC20Guild__WrongLengthOfToDataOrValue"
       );
     });
 
@@ -725,7 +726,7 @@ contract("ERC20Guild", function (accounts) {
           constants.NULL_ADDRESS,
           { from: accounts[3] }
         ),
-        "ERC20Guild: to, data value arrays cannot be empty"
+        "ERC20Guild__CannotBeZero"
       );
     });
 
@@ -742,7 +743,7 @@ contract("ERC20Guild", function (accounts) {
       // Cant create because maxActiveProposals limit reached
       await expectRevert(
         createProposal(genericProposal),
-        "ERC20Guild: Maximum amount of active proposals reached"
+        "ERC20Guild__MaxAmountOfActiveProposalsReached"
       );
 
       // Finish one proposal and can create another
@@ -772,7 +773,7 @@ contract("ERC20Guild", function (accounts) {
           ],
           account: accounts[3],
         }),
-        "ERC20Guild: Maximum amount of actions per proposal reached"
+        "ERC20Guild__MaximumActionsPerProposalReached"
       );
     });
   });
